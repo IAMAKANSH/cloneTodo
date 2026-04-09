@@ -60,12 +60,13 @@ function today() { return now().split('T')[0]; }
 
 // ─── Task Actions ─────────────────────────────────────────────────────
 const taskActions = {
-  add_task({ title, important = false, add_to_myday = false, due_date = null }) {
+  add_task({ title, important = false, add_to_myday = false, due_date = null, assigned_to = null }) {
     const tasks = loadTasks();
     const task = {
       id: randomUUID(), title, isCompleted: false, isImportant: important,
       isMyDay: add_to_myday, myDayDate: add_to_myday ? today() : null,
-      dueDate: due_date || null, notes: '', categories: [], sortOrder: tasks.length,
+      dueDate: due_date || null, assignedTo: assigned_to || null,
+      notes: '', categories: [], sortOrder: tasks.length,
       createdAt: now(), updatedAt: now(),
     };
     tasks.push(task);
@@ -120,7 +121,7 @@ const taskActions = {
     return { ok: true, task: match, message: `${match.isMyDay ? 'Added to' : 'Removed from'} My Day: "${match.title}"` };
   },
 
-  update_task({ search, important, due_date, add_to_myday, title: newTitle }) {
+  update_task({ search, important, due_date, add_to_myday, title: newTitle, assigned_to }) {
     const tasks = loadTasks();
     const match = findTask(search, tasks);
     if (!match) return { ok: false, message: `No task matching "${search}"` };
@@ -129,6 +130,7 @@ const taskActions = {
     if (due_date !== undefined) { match.dueDate = due_date; changes.push(`due date set to ${due_date}`); }
     if (add_to_myday !== undefined) { match.isMyDay = add_to_myday; match.myDayDate = add_to_myday ? today() : null; changes.push(add_to_myday ? 'added to My Day' : 'removed from My Day'); }
     if (newTitle) { match.title = newTitle; changes.push(`renamed to "${newTitle}"`); }
+    if (assigned_to !== undefined) { match.assignedTo = assigned_to || null; changes.push(assigned_to ? `assigned to ${assigned_to}` : 'unassigned'); }
     match.updatedAt = now();
     saveTasks(tasks);
     return { ok: true, task: match, message: `Updated "${match.title}": ${changes.join(', ')}` };
@@ -249,13 +251,13 @@ When the user wants an action, respond with ONLY a JSON block:
 \`\`\`
 
 Actions:
-- {"action": "add_task", "params": {"title": "name", "important": false, "add_to_myday": false, "due_date": "2026-04-20"}}
+- {"action": "add_task", "params": {"title": "name", "important": false, "add_to_myday": false, "due_date": "2026-04-20", "assigned_to": "email@example.com"}}
 - {"action": "show_tasks", "params": {"filter": "all|myday|important|completed"}}
 - {"action": "complete_task", "params": {"search": "task name"}}
 - {"action": "delete_task", "params": {"search": "task name"}}
 - {"action": "star_task", "params": {"search": "task name"}}
 - {"action": "add_to_myday", "params": {"search": "task name"}}
-- {"action": "update_task", "params": {"search": "task name", "important": true, "due_date": "2026-04-10", "add_to_myday": true, "title": "new name"}} (all params optional except search)
+- {"action": "update_task", "params": {"search": "task name", "important": true, "due_date": "2026-04-10", "add_to_myday": true, "title": "new name", "assigned_to": "email@example.com"}} (all params optional except search)
 - {"action": "search_tasks", "params": {"query": "keyword"}}
 
 For casual chat, respond normally with plain text. Be concise and friendly.`;

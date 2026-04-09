@@ -44,7 +44,7 @@ async function syncWithAgent() {
           dueDate: t.dueDate || null,
           reminderDate: null,
           recurrence: null,
-          assignedTo: null,
+          assignedTo: t.assignedTo || null,
           categories: t.categories || [],
           sortOrder: t.sortOrder || 0,
           completedAt: t.completedAt || null,
@@ -77,6 +77,7 @@ async function syncWithAgent() {
           myDayDate: agentTask.myDayDate || null,
           dueDate: agentTask.dueDate || null,
           title: agentTask.title,
+          assignedTo: agentTask.assignedTo || null,
           updatedAt: agentTask.updatedAt,
         });
         updated++;
