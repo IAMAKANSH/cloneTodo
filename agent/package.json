@@ -1,0 +1,13 @@
+{
+  "name": "todo-agent",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "AI-powered task agent — manage tasks from terminal",
+  "bin": {
+    "todo": "./todo.js"
+  },
+  "scripts": {
+    "start": "node todo.js"
+  },
+  "dependencies": {}
+}
