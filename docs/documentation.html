@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Microsoft To Do Clone — Technical Documentation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 11pt;
+    line-height: 1.7;
+    color: #1a1a2e;
+    background: #fff;
+    padding: 40px 60px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .cover {
+    text-align: center;
+    padding: 80px 0 60px;
+    border-bottom: 3px solid #6366f1;
+    margin-bottom: 40px;
+    page-break-after: always;
+  }
+  .cover h1 {
+    font-size: 32pt;
+    font-weight: 800;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 12px;
+  }
+  .cover .subtitle {
+    font-size: 14pt;
+    color: #64748b;
+    font-weight: 400;
+    margin-bottom: 40px;
+  }
+  .cover .meta {
+    font-size: 10pt;
+    color: #94a3b8;
+    line-height: 2;
+  }
+  .cover .meta strong { color: #475569; }
+
+  h2 {
+    font-size: 18pt;
+    font-weight: 700;
+    color: #6366f1;
+    margin: 36px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e2e8f0;
+  }
+  h3 {
+    font-size: 13pt;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 24px 0 10px;
+  }
+  h4 {
+    font-size: 11pt;
+    font-weight: 600;
+    color: #475569;
+    margin: 16px 0 8px;
+  }
+
+  p { margin-bottom: 10px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 20px;
+    font-size: 10pt;
+  }
+  th {
+    background: #f1f5f9;
+    color: #334155;
+    font-weight: 600;
+    text-align: left;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+  }
+  td {
+    padding: 7px 12px;
+    border: 1px solid #e2e8f0;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #fafbfd; }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5pt;
+    background: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #6366f1;
+  }
+  pre {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 16px 20px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9pt;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 12px 0 20px;
+  }
+  pre code { background: none; color: inherit; padding: 0; }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 8.5pt;
+    font-weight: 600;
+    margin-right: 4px;
+  }
+  .badge-purple { background: #ede9fe; color: #7c3aed; }
+  .badge-blue { background: #dbeafe; color: #2563eb; }
+  .badge-green { background: #dcfce7; color: #16a34a; }
+  .badge-orange { background: #fff7ed; color: #ea580c; }
+
+  ul, ol { margin: 8px 0 16px 24px; }
+  li { margin-bottom: 4px; }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 12px 0 20px;
+  }
+  .feature-card {
+    padding: 14px 16px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #fafbfd;
+  }
+  .feature-card h4 { margin: 0 0 6px; color: #6366f1; font-size: 10pt; }
+  .feature-card p { margin: 0; font-size: 9.5pt; color: #64748b; }
+
+  .arch-diagram {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 8.5pt;
+    line-height: 1.5;
+    white-space: pre;
+    margin: 12px 0 20px;
+  }
+
+  .toc { margin: 20px 0 40px; }
+  .toc a { color: #6366f1; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .toc li { margin-bottom: 6px; }
+
+  .section { page-break-inside: avoid; }
+
+  @media print {
+    body { padding: 20px 40px; font-size: 10pt; }
+    h2 { page-break-before: always; }
+    .cover { page-break-before: avoid; }
+    pre { font-size: 8pt; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="cover">
+  <h1>Microsoft To Do Clone</h1>
+  <p class="subtitle">Technical Documentation & Architecture Guide</p>
+  <div class="meta">
+    <strong>Author:</strong> Akansh Srivastava (srivastavaak@microsoft.com)<br>
+    <strong>AI Assisted By:</strong> Claude Opus 4.6 (Anthropic)<br>
+    <strong>Date:</strong> April 9, 2026<br>
+    <strong>Repository:</strong> github.com/IAMAKANSH/cloneTodo<br>
+    <strong>Version:</strong> 1.0.0
+  </div>
+</div>
+
+<!-- TABLE OF CONTENTS -->
+<h2 style="page-break-before: avoid;">Table of Contents</h2>
+<ol class="toc">
+  <li><a href="#stack">Technology Stack</a></li>
+  <li><a href="#features">Features Overview</a></li>
+  <li><a href="#architecture">System Architecture</a></li>
+  <li><a href="#database">Database Schema</a></li>
+  <li><a href="#apis">REST API Endpoints</a></li>
+  <li><a href="#graph">Microsoft Graph API Integration</a></li>
+  <li><a href="#auth">Authentication (MSAL)</a></li>
+  <li><a href="#ai">AI Integration</a></li>
+  <li><a href="#prompts">AI Prompts & Tool Definitions</a></li>
+  <li><a href="#cli">CLI Agent</a></li>
+  <li><a href="#ui">UI Design System</a></li>
+  <li><a href="#structure">Project File Structure</a></li>
+  <li><a href="#setup">Setup Guide</a></li>
+  <li><a href="#future">Future Roadmap</a></li>
+  <li><a href="#prompts-used">Development Prompts & Journey</a></li>
+</ol>
+
+<!-- 1. TECH STACK -->
+<h2 id="stack">1. Technology Stack</h2>
+
+<table>
+  <tr><th>Layer</th><th>Technology</th><th>Version</th><th>Purpose</th></tr>
+  <tr><td>Framework</td><td>React</td><td>19.2</td><td>UI component library</td></tr>
+  <tr><td>Language</td><td>TypeScript</td><td>6.0</td><td>Type-safe JavaScript</td></tr>
+  <tr><td>Build Tool</td><td>Vite</td><td>8.0</td><td>Dev server, bundling, proxy</td></tr>
+  <tr><td>Styling</td><td>Tailwind CSS</td><td>4.2</td><td>Utility-first CSS framework</td></tr>
+  <tr><td>State</td><td>Zustand</td><td>5.0</td><td>Lightweight state management</td></tr>
+  <tr><td>Database</td><td>Dexie.js</td><td>4.4</td><td>IndexedDB wrapper (offline-first)</td></tr>
+  <tr><td>Animation</td><td>Framer Motion</td><td>12.38</td><td>Spring physics, layout animations</td></tr>
+  <tr><td>UI Components</td><td>Radix UI</td><td>Latest</td><td>Accessible headless components</td></tr>
+  <tr><td>Drag & Drop</td><td>dnd-kit</td><td>6.3</td><td>Task reordering</td></tr>
+  <tr><td>Icons</td><td>Lucide React</td><td>1.7</td><td>50+ SVG icons</td></tr>
+  <tr><td>Dates</td><td>date-fns</td><td>4.1</td><td>Date formatting & comparison</td></tr>
+  <tr><td>Auth</td><td>@azure/msal-browser</td><td>Latest</td><td>Microsoft OAuth2 (SPA)</td></tr>
+  <tr><td>AI (Free)</td><td>NVIDIA NIM API</td><td>—</td><td>Llama 3.1 70B inference</td></tr>
+  <tr><td>AI (Paid)</td><td>Anthropic Claude API</td><td>—</td><td>Claude Sonnet with tool calling</td></tr>
+  <tr><td>CLI Runtime</td><td>Node.js</td><td>24.x</td><td>Standalone agent (zero deps)</td></tr>
+</table>
+
+<!-- 2. FEATURES -->
+<h2 id="features">2. Features Overview</h2>
+
+<div class="feature-grid">
+  <div class="feature-card">
+    <h4>Task Management</h4>
+    <p>CRUD, subtasks, categories, recurrence, reminders, due dates, drag-and-drop reordering, context menus</p>
+  </div>
+  <div class="feature-card">
+    <h4>Smart Lists</h4>
+    <p>My Day (daily reset), Important (starred), Planned (due dates), Assigned, custom lists with themes</p>
+  </div>
+  <div class="feature-card">
+    <h4>Microsoft 365</h4>
+    <p>Outlook mail & calendar, Planner tasks, Teams messages — auto-sync every 5 minutes</p>
+  </div>
+  <div class="feature-card">
+    <h4>AI Chat Assistant</h4>
+    <p>Natural language task management via NVIDIA NIM (free) or Anthropic Claude</p>
+  </div>
+  <div class="feature-card">
+    <h4>CLI Agent</h4>
+    <p>Global <code>todo</code> command with REST API server, bidirectional sync with web app</p>
+  </div>
+  <div class="feature-card">
+    <h4>Premium UI</h4>
+    <p>Glassmorphism, 3D card animations, dark mode, animated gradients, spring physics</p>
+  </div>
+</div>
+
+<!-- 3. ARCHITECTURE -->
+<h2 id="architecture">3. System Architecture</h2>
+
+<div class="arch-diagram">┌──────────────────────────────────────────────────────────────┐
+│                      Web App (React SPA)                      │
+│                                                                │
+│  ┌────────────┐  ┌────────────┐  ┌──────────────────────┐    │
+│  │  Zustand    │  │   Dexie    │  │  Microsoft Graph     │    │
+│  │  6 Stores   │  │  IndexedDB │  │  (Outlook/Teams)     │    │
+│  └────────────┘  └────────────┘  └──────────────────────┘    │
+│                                                                │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │        AI Chat Panel (NVIDIA NIM / Claude)            │    │
+│  │        Vite Proxy → External APIs                     │    │
+│  └──────────────────────────────────────────────────────┘    │
+└──────────────────────┬───────────────────────────────────────┘
+                       │  HTTP Sync (15s polling)
+┌──────────────────────┴───────────────────────────────────────┐
+│                   CLI Agent (Node.js)                          │
+│                                                                │
+│  ┌────────────┐  ┌────────────┐  ┌──────────────────────┐    │
+│  │  Terminal   │  │  REST API  │  │   NVIDIA NIM AI      │    │
+│  │  REPL       │  │  :3001     │  │   (Llama 3.1 70B)   │    │
+│  └────────────┘  └────────────┘  └──────────────────────┘    │
+│                                                                │
+│  ┌──────────────────────────────────────────────────────┐    │
+│  │              tasks.json (shared storage)               │    │
+│  └──────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────┘</div>
+
+<h3>Data Flow</h3>
+<ol>
+  <li><strong>Web App → IndexedDB:</strong> All task CRUD via Dexie with reactive <code>useLiveQuery</code></li>
+  <li><strong>Web App → Graph API:</strong> MSAL token → fetch to Microsoft Graph endpoints → cache in IndexedDB</li>
+  <li><strong>Web App → AI:</strong> Vite proxy forwards to NVIDIA NIM / Anthropic → JSON action → execute locally</li>
+  <li><strong>CLI → tasks.json:</strong> Direct file read/write for all task operations</li>
+  <li><strong>CLI ↔ Web App:</strong> Web app polls <code>localhost:3001/api/tasks</code> every 15s, syncs both directions</li>
+</ol>
+
+<!-- 4. DATABASE -->
+<h2 id="database">4. Database Schema</h2>
+
+<h3>Dexie IndexedDB — Version 3</h3>
+
+<table>
+  <tr><th>Table</th><th>Indexes</th><th>Purpose</th></tr>
+  <tr><td><code>tasks</code></td><td>id, listId, isCompleted, isImportant, isMyDay, dueDate, assignedTo, createdAt, sortOrder, *categories</td><td>All user tasks</td></tr>
+  <tr><td><code>steps</code></td><td>id, taskId, sortOrder</td><td>Subtasks for each task</td></tr>
+  <tr><td><code>attachments</code></td><td>id, taskId</td><td>File attachments</td></tr>
+  <tr><td><code>lists</code></td><td>id, groupId, sortOrder</td><td>Custom task lists</td></tr>
+  <tr><td><code>groups</code></td><td>id, sortOrder</td><td>List groups</td></tr>
+  <tr><td><code>outlookEmails</code></td><td>id, receivedDateTime, flagStatus</td><td>Cached Outlook emails</td></tr>
+  <tr><td><code>calendarEvents</code></td><td>id</td><td>Cached calendar events</td></tr>
+  <tr><td><code>teamsMentions</code></td><td>id, createdDateTime</td><td>Cached Teams messages</td></tr>
+  <tr><td><code>plannerTasks</code></td><td>id, dueDateTime</td><td>Cached Planner tasks</td></tr>
+  <tr><td><code>syncMetadata</code></td><td>key</td><td>Last sync timestamps</td></tr>
+</table>
+
+<h3>Task Object Schema</h3>
+<pre><code>{
+  id: string (UUID),
+  listId: string,
+  title: string,
+  notes: string,
+  isCompleted: boolean,
+  isImportant: boolean,
+  isMyDay: boolean,
+  myDayDate: string | null,       // "2026-04-09"
+  dueDate: string | null,
+  reminderDate: string | null,
+  recurrence: RecurrenceRule | null,
+  assignedTo: string | null,
+  categories: string[],
+  sortOrder: number,
+  completedAt: string | null,
+  reminderFired: boolean,
+  createdAt: string (ISO),
+  updatedAt: string (ISO)
+}</code></pre>
+
+<h3>CLI Agent Storage — tasks.json</h3>
+<pre><code>[
+  {
+    "id": "uuid",
+    "title": "Task name",
+    "isCompleted": false,
+    "isImportant": true,
+    "isMyDay": false,
+    "myDayDate": null,
+    "dueDate": "2026-04-20",
+    "notes": "",
+    "categories": [],
+    "sortOrder": 0,
+    "createdAt": "2026-04-09T12:00:00.000Z",
+    "updatedAt": "2026-04-09T12:00:00.000Z"
+  }
+]</code></pre>
+
+<!-- 5. REST API -->
+<h2 id="apis">5. REST API Endpoints (CLI Agent Server)</h2>
+
+<p>Server runs on <code>http://localhost:3001</code> when the CLI agent is active.</p>
+
+<table>
+  <tr><th>Method</th><th>Endpoint</th><th>Body</th><th>Description</th></tr>
+  <tr><td>GET</td><td><code>/health</code></td><td>—</td><td>Health check, returns task count</td></tr>
+  <tr><td>GET</td><td><code>/api/tasks</code></td><td>—</td><td>Get all tasks</td></tr>
+  <tr><td>POST</td><td><code>/api/tasks</code></td><td><code>{ title, important, add_to_myday, due_date }</code></td><td>Create task</td></tr>
+  <tr><td>POST</td><td><code>/api/tasks/complete</code></td><td><code>{ search }</code></td><td>Complete task by name</td></tr>
+  <tr><td>POST</td><td><code>/api/tasks/delete</code></td><td><code>{ search }</code></td><td>Delete task by name</td></tr>
+  <tr><td>POST</td><td><code>/api/tasks/star</code></td><td><code>{ search }</code></td><td>Toggle importance</td></tr>
+  <tr><td>POST</td><td><code>/api/tasks/myday</code></td><td><code>{ search }</code></td><td>Toggle My Day</td></tr>
+  <tr><td>POST</td><td><code>/api/tasks/update</code></td><td><code>{ search, important, due_date, add_to_myday, title }</code></td><td>Update task fields</td></tr>
+  <tr><td>POST</td><td><code>/api/tasks/search</code></td><td><code>{ query }</code></td><td>Search tasks</td></tr>
+  <tr><td>POST</td><td><code>/api/tasks/import</code></td><td><code>{ tasks: [...] }</code></td><td>Bulk import (for sync)</td></tr>
+  <tr><td>POST</td><td><code>/api/tasks/action</code></td><td><code>{ action, params }</code></td><td>Generic AI action endpoint</td></tr>
+</table>
+
+<!-- 6. GRAPH API -->
+<h2 id="graph">6. Microsoft Graph API Integration</h2>
+
+<h3>Endpoints Used</h3>
+<table>
+  <tr><th>Service</th><th>Graph Endpoint</th><th>Permission</th><th>Account Type</th></tr>
+  <tr><td>User Profile</td><td><code>GET /me</code></td><td>User.Read</td><td>All</td></tr>
+  <tr><td>Profile Photo</td><td><code>GET /me/photo/$value</code></td><td>User.Read</td><td>All</td></tr>
+  <tr><td>Flagged Emails</td><td><code>GET /me/messages?$filter=flag/flagStatus eq 'flagged'</code></td><td>Mail.Read</td><td>All*</td></tr>
+  <tr><td>Recent Emails</td><td><code>GET /me/messages?$top=50</code></td><td>Mail.Read</td><td>All</td></tr>
+  <tr><td>Calendar Events</td><td><code>GET /me/calendarview?startdatetime=...&enddatetime=...</code></td><td>Calendars.Read</td><td>All</td></tr>
+  <tr><td>Planner Tasks</td><td><code>GET /me/planner/tasks</code></td><td>Tasks.Read</td><td>Work only</td></tr>
+  <tr><td>Teams Chats</td><td><code>GET /me/chats?$expand=lastMessagePreview</code></td><td>Chat.Read</td><td>Work only</td></tr>
+</table>
+<p><em>* Personal accounts use client-side filtering as fallback when <code>$filter</code> + <code>$orderby</code> is not supported.</em></p>
+
+<h3>Graph Client Architecture</h3>
+<pre><code>// Lightweight fetch wrapper — no SDK dependency
+async function graphFetch&lt;T&gt;(endpoint: string): Promise&lt;T&gt; {
+  const token = await authActions.getAccessToken();
+  const response = await fetch(
+    `https://graph.microsoft.com/v1.0/${endpoint}`,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+  return response.json();
+}</code></pre>
+
+<h3>Personal vs Work Account Detection</h3>
+<pre><code>// Microsoft personal account tenant ID
+const MSA_TENANT_ID = '9188040d-6c67-4c5b-b112-36a304b66dad';
+const isPersonal = account.tenantId === MSA_TENANT_ID;
+// Skip Planner & Teams APIs for personal accounts</code></pre>
+
+<!-- 7. AUTH -->
+<h2 id="auth">7. Authentication (MSAL)</h2>
+
+<h3>Configuration</h3>
+<table>
+  <tr><th>Field</th><th>Value</th></tr>
+  <tr><td>Client ID</td><td><code>98f50838-f29a-4ea1-a6ab-3381a5551911</code></td></tr>
+  <tr><td>Authority</td><td><code>https://login.microsoftonline.com/common</code></td></tr>
+  <tr><td>Redirect URI</td><td><code>http://localhost:5173</code> (SPA)</td></tr>
+  <tr><td>Cache</td><td>localStorage</td></tr>
+  <tr><td>Login Flow</td><td>Redirect (not popup — avoids browser blocking)</td></tr>
+</table>
+
+<h3>Scopes Requested</h3>
+<pre><code>User.Read, Mail.Read, Calendars.Read, Tasks.Read,
+Tasks.ReadWrite, Team.ReadBasic.All, Chat.Read</code></pre>
+
+<h3>Token Flow</h3>
+<ol>
+  <li>User clicks "Sign in with Microsoft" → <code>msalInstance.loginRedirect()</code></li>
+  <li>Browser redirects to Microsoft login → user authenticates → redirects back</li>
+  <li><code>msalInstance.handleRedirectPromise()</code> captures the response</li>
+  <li>Subsequent API calls use <code>acquireTokenSilent()</code> with iframe renewal</li>
+  <li>If silent fails → <code>acquireTokenRedirect()</code> for re-authentication</li>
+</ol>
+
+<!-- 8. AI INTEGRATION -->
+<h2 id="ai">8. AI Integration</h2>
+
+<h3>Two Providers</h3>
+<table>
+  <tr><th>Provider</th><th>Model</th><th>Cost</th><th>Method</th><th>Rate Limit</th></tr>
+  <tr><td>NVIDIA NIM</td><td>meta/llama-3.1-70b-instruct</td><td>Free</td><td>Prompt-based JSON actions</td><td>40 req/min</td></tr>
+  <tr><td>Anthropic</td><td>claude-sonnet-4-20250514</td><td>Paid</td><td>Native tool calling</td><td>Per plan</td></tr>
+</table>
+
+<h3>How It Works (NVIDIA NIM)</h3>
+<ol>
+  <li>User types natural language message</li>
+  <li>System prompt is built with current task list + available action schemas</li>
+  <li>Message sent to Llama 3.1 70B via <code>https://integrate.api.nvidia.com/v1/chat/completions</code></li>
+  <li>AI responds with either:
+    <ul>
+      <li><strong>JSON action block</strong> — parsed and executed against local DB</li>
+      <li><strong>Plain text</strong> — displayed as conversational response</li>
+    </ul>
+  </li>
+  <li>After action execution, result sent back to AI for friendly summary</li>
+</ol>
+
+<h3>How It Works (Anthropic Claude)</h3>
+<ol>
+  <li>Same user message, but sent with <strong>tool definitions</strong> (function schemas)</li>
+  <li>Claude returns <code>tool_use</code> content blocks with function name + parameters</li>
+  <li>Tool executed locally → result sent back as <code>tool_result</code></li>
+  <li>Claude generates final natural language response</li>
+</ol>
+
+<h3>CORS Solution</h3>
+<pre><code>// vite.config.ts — Proxy external APIs to avoid browser CORS
+server: {
+  proxy: {
+    '/api/nvidia': {
+      target: 'https://integrate.api.nvidia.com',
+      changeOrigin: true,
+      rewrite: (path) => path.replace(/^\/api\/nvidia/, ''),
+    },
+    '/api/claude': {
+      target: 'https://api.anthropic.com',
+      changeOrigin: true,
+      rewrite: (path) => path.replace(/^\/api\/claude/, ''),
+    },
+  },
+}</code></pre>
+
+<h3>Fallback: Regex Command Parser</h3>
+<p>When no AI API key is configured, the chat uses a rule-based parser with 20+ regex patterns:</p>
+<pre><code>// Example patterns
+/^(?:add|create|new)\s+(?:a\s+)?task[:\s]+(.+)/i  → add_task
+/^(?:complete|done|finish)[:\s]+(.+)/i             → complete_task
+/^(?:show|list)\s+(?:my\s+)?tasks?/i               → show_tasks
+/^(?:calendar|meetings|events)/i                    → show_calendar</code></pre>
+
+<!-- 9. PROMPTS -->
+<h2 id="prompts">9. AI Prompts & Tool Definitions</h2>
+
+<h3>System Prompt (NVIDIA NIM — CLI & Web)</h3>
+<pre><code>You are a friendly task management AI assistant.
+Today: {date}. Tasks: {count} active, {completed} completed.
+Active tasks: "Task 1" ⭐, "Task 2" ☀️, ...
+
+When the user wants an action, respond with ONLY JSON:
+```json
+{"action": "ACTION", "params": {PARAMS}}
+```
+
+Actions:
+- {"action": "add_task", "params": {"title": "name", "important": false,
+   "add_to_myday": false, "due_date": "2026-04-20"}}
+- {"action": "show_tasks", "params": {"filter": "all|myday|important|completed"}}
+- {"action": "complete_task", "params": {"search": "task name"}}
+- {"action": "delete_task", "params": {"search": "task name"}}
+- {"action": "star_task", "params": {"search": "task name"}}
+- {"action": "add_to_myday", "params": {"search": "task name"}}
+- {"action": "update_task", "params": {"search": "task name",
+   "important": true, "due_date": "2026-04-10"}}
+- {"action": "search_tasks", "params": {"query": "keyword"}}
+
+For casual chat, respond normally (no JSON). Be concise.</code></pre>
+
+<h3>Anthropic Claude Tool Definitions</h3>
+<pre><code>[
+  {
+    "name": "add_task",
+    "description": "Create a new task",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "important": { "type": "boolean" },
+        "add_to_myday": { "type": "boolean" }
+      },
+      "required": ["title"]
+    }
+  },
+  {
+    "name": "show_tasks",
+    "description": "Show/list tasks",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "filter": { "type": "string",
+          "enum": ["all","myday","important","completed","planned"] }
+      },
+      "required": ["filter"]
+    }
+  },
+  // ... 7 more tools: complete_task, delete_task, star_task,
+  //     add_to_myday, search_tasks, show_calendar, show_emails
+]</code></pre>
+
+<h3>Fuzzy Task Matching Algorithm</h3>
+<pre><code>// 4-stage matching pipeline:
+1. Exact case-insensitive match
+2. Starts-with match
+3. Contains (substring) match
+4. Trigram similarity (Jaccard index > 0.3)
+
+// Trigram example: "groceries" → {"  g"," gr","gro","roc","oce","cer","eri","rie","ies","es "}
+// Score = |intersection| / |union| of trigram sets</code></pre>
+
+<!-- 10. CLI AGENT -->
+<h2 id="cli">10. CLI Agent</h2>
+
+<h3>Installation</h3>
+<pre><code># Install globally
+cd agent && npm link
+
+# Configure
+echo "NVIDIA_API_KEY=nvapi-your-key-here" > agent/.env
+
+# Run from anywhere
+todo</code></pre>
+
+<h3>Features</h3>
+<ul>
+  <li><strong>AI-powered:</strong> Natural language → NVIDIA NIM (Llama 3.1 70B) → JSON action → execute</li>
+  <li><strong>Quick commands:</strong> <code>tasks</code>, <code>myday</code>, <code>important</code> — instant, no AI call</li>
+  <li><strong>REST server:</strong> Runs on port 3001 alongside the REPL</li>
+  <li><strong>Sync:</strong> Web app polls every 15s with hash-based change detection</li>
+  <li><strong>Zero dependencies:</strong> Pure Node.js — <code>node:http</code>, <code>node:fs</code>, <code>node:readline</code>, <code>node:crypto</code></li>
+  <li><strong>Colored output:</strong> ANSI escape codes for task status, stars, icons</li>
+</ul>
+
+<h3>Sync Mechanism</h3>
+<pre><code>// Web app (useAgentSync.ts):
+1. Fetch GET localhost:3001/health → if fails, skip silently
+2. Fetch GET localhost:3001/api/tasks → get agent tasks
+3. Compare hash of task IDs + updatedAt → skip if unchanged
+4. Import new tasks into IndexedDB (bulkAdd)
+5. Update existing tasks where agent.updatedAt > local.updatedAt
+6. Export web app tasks back to agent (POST /api/tasks/import)</code></pre>
+
+<!-- 11. UI DESIGN -->
+<h2 id="ui">11. UI Design System</h2>
+
+<h3>Glassmorphism</h3>
+<pre><code>.glass {
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+}</code></pre>
+
+<h3>3D Task Cards</h3>
+<pre><code>.task-item:hover {
+  transform: translateY(-2px) scale(1.005);
+  box-shadow: 0 8px 32px rgba(37, 100, 207, 0.12);
+}</code></pre>
+
+<h3>CSS Custom Properties (30+)</h3>
+<table>
+  <tr><th>Category</th><th>Examples</th></tr>
+  <tr><td>Colors</td><td><code>--color-primary</code>, <code>--color-glass</code>, <code>--color-primary-glow</code></td></tr>
+  <tr><td>Layout</td><td><code>--sidebar-width: 290px</code>, <code>--detail-panel-width: 380px</code></td></tr>
+  <tr><td>Radii</td><td><code>--radius-sm: 8px</code> to <code>--radius-xl: 20px</code></td></tr>
+  <tr><td>Shadows</td><td><code>--shadow-card</code>, <code>--shadow-card-hover</code> (blue-tinted)</td></tr>
+  <tr><td>Blur</td><td><code>--blur-glass: 20px</code>, <code>--blur-sidebar: 24px</code></td></tr>
+  <tr><td>Transitions</td><td><code>--transition-spring: 500ms cubic-bezier(0.34, 1.56, 0.64, 1)</code></td></tr>
+</table>
+
+<h3>Key Animations</h3>
+<ul>
+  <li><code>meshFloat</code> — Animated background gradient (20s loop)</li>
+  <li><code>fadeInUp</code> — Staggered task entry (0.03s delay per item)</li>
+  <li><code>checkmark-draw</code> — SVG checkmark stroke animation</li>
+  <li><code>pulse-ring</code> — Checkbox glow on completion</li>
+  <li><code>shimmer</code> — Loading skeleton gradient sweep</li>
+  <li><code>float</code> — Empty state icon bobbing</li>
+  <li>Framer Motion springs for panels, dialogs, chat bubbles</li>
+</ul>
+
+<!-- 12. FILE STRUCTURE -->
+<h2 id="structure">12. Project File Structure</h2>
+
+<pre><code>src/
+├── App.tsx                          # Root component
+├── main.tsx                         # Entry point + MSAL init
+├── index.css                        # Design system (350+ lines)
+├── components/
+│   ├── layout/                      # AppLayout, Sidebar, TaskListPanel,
+│   │                                  TaskDetailPanel, ListHeader,
+│   │                                  IntegrationSection, IntegrationViewHeader
+│   ├── tasks/                       # TaskItem, TaskInput, TaskCheckbox,
+│   │                                  CompletedSection, TaskContextMenu,
+│   │                                  TaskRecurrence, TaskReminder, TaskCategories
+│   ├── chatbot/ChatPanel.tsx        # AI chat floating panel
+│   ├── auth/AccountButton.tsx       # Microsoft sign-in/out
+│   ├── outlook/FlaggedEmailsList.tsx
+│   ├── calendar/CalendarEventsSection.tsx
+│   ├── teams/TeamsMentionsList.tsx
+│   ├── myday/MyDaySuggestions.tsx    # Smart suggestions (local + M365)
+│   ├── search/SearchOverlay.tsx
+│   └── settings/SettingsDialog.tsx
+├── stores/                          # Zustand stores
+│   ├── uiStore.ts                   # UI state (active view, panels)
+│   ├── taskStore.ts                 # Task CRUD actions
+│   ├── listStore.ts                 # List management
+│   ├── settingsStore.ts             # Persisted preferences
+│   ├── authStore.ts                 # MSAL auth state
+│   ├── integrationStore.ts          # M365 sync status
+│   └── chatStore.ts                 # Chat messages + AI
+├── services/                        # Graph API services
+│   ├── graphClient.ts               # Fetch wrapper
+│   ├── outlookMailService.ts
+│   ├── outlookCalendarService.ts
+│   ├── teamsService.ts
+│   └── userService.ts
+├── hooks/                           # Custom React hooks
+│   ├── useTasks.ts, useLists.ts
+│   ├── useTheme.ts, useKeyboardShortcuts.ts
+│   ├── useReminders.ts
+│   ├── useIntegrationSync.ts        # M365 auto-sync
+│   ├── useAgentSync.ts              # CLI agent sync
+│   └── useSmartSuggestions.ts
+├── lib/
+│   ├── chatbot/                     # AI engine
+│   │   ├── aiService.ts             # NVIDIA + Anthropic providers
+│   │   ├── commandParser.ts         # Regex fallback parser
+│   │   ├── commandExecutor.ts       # Action executor
+│   │   └── fuzzyMatch.ts            # Trigram matching
+│   ├── msalConfig.ts                # Azure AD config
+│   ├── constants.ts, dates.ts, sounds.ts, recurrence.ts
+├── db/
+│   ├── database.ts                  # Dexie schema (v3, 10 tables)
+│   └── seed.ts                      # Default list creation
+└── types/
+    ├── task.ts, list.ts, settings.ts, ui.ts
+    ├── graph.ts                     # Microsoft Graph types
+    └── chat.ts                      # Chat/command types
+
+agent/
+├── todo.js                          # CLI agent + REST server (single file)
+├── package.json                     # bin: { "todo": "./todo.js" }
+├── .env                             # NVIDIA_API_KEY (not committed)
+└── tasks.json                       # Task storage (not committed)</code></pre>
+
+<!-- 13. SETUP -->
+<h2 id="setup">13. Setup Guide</h2>
+
+<h3>Prerequisites</h3>
+<ul>
+  <li>Node.js 18+ installed</li>
+  <li>Git installed</li>
+  <li>A Microsoft account (personal or work)</li>
+  <li>NVIDIA NIM API key (free) from <code>build.nvidia.com</code></li>
+</ul>
+
+<h3>Step-by-Step</h3>
+<pre><code># 1. Clone
+git clone https://github.com/IAMAKANSH/cloneTodo.git
+cd cloneTodo
+
+# 2. Install web app dependencies
+npm install
+
+# 3. Start web app
+npm run dev
+# → Open http://localhost:5173
+
+# 4. Set up CLI agent (optional)
+cd agent
+npm link
+echo "NVIDIA_API_KEY=your-key" > .env
+
+# 5. Run CLI from anywhere
+todo
+
+# 6. Azure AD setup (for Microsoft 365)
+# See README.md for full Azure Portal instructions</code></pre>
+
+<!-- 14. FUTURE -->
+<h2 id="future">14. Future Roadmap</h2>
+
+<table>
+  <tr><th>Feature</th><th>Priority</th><th>Status</th></tr>
+  <tr><td>Microsoft Teams Bot</td><td>High</td><td>Planned</td></tr>
+  <tr><td>PWA (Progressive Web App)</td><td>High</td><td>Planned</td></tr>
+  <tr><td>Mobile responsive design</td><td>High</td><td>Planned</td></tr>
+  <tr><td>Voice commands (Whisper)</td><td>Medium</td><td>Planned</td></tr>
+  <tr><td>Shared lists (collaboration)</td><td>Medium</td><td>Planned</td></tr>
+  <tr><td>Task attachments</td><td>Medium</td><td>Planned</td></tr>
+  <tr><td>Export to CSV/PDF</td><td>Low</td><td>Planned</td></tr>
+  <tr><td>AI auto-categorization</td><td>Low</td><td>Planned</td></tr>
+  <tr><td>Natural language due dates</td><td>Low</td><td>Planned</td></tr>
+  <tr><td>Daily summary notifications</td><td>Low</td><td>Planned</td></tr>
+</table>
+
+<!-- 15. DEVELOPMENT PROMPTS -->
+<h2 id="prompts-used">15. Development Prompts & Journey</h2>
+
+<p>Below is the complete sequence of prompts used during the AI-assisted development of this application with Claude Opus 4.6. Each prompt built on the previous phase, progressively adding features. These prompts are enhanced versions of the originals.</p>
+
+<h3>Phase 1: Core Application</h3>
+
+<h4>Prompt 1 — Initial Build</h4>
+<div style="background:#f8fafc; border-left: 4px solid #6366f1; padding: 12px 16px; margin: 10px 0 16px; border-radius: 0 8px 8px 0;">
+<p style="font-style: italic; color: #475569; margin: 0;">
+"Build a clone of Microsoft To Do: Lists, Tasks & Reminders as a React + TypeScript + Vite web application. It should include full task management — create, edit, delete, complete tasks with subtasks, categories, recurrence rules, reminders, and due dates. Implement a 3-panel layout (sidebar, task list, detail panel) matching the real Microsoft To Do structure. Use Zustand for state management, Dexie.js for IndexedDB offline-first storage, dnd-kit for drag-and-drop reordering, Radix UI for accessible components, and Lucide React for icons. Include smart lists: My Day, Important, Planned, Assigned to Me, and custom lists with color themes."
+</p>
+</div>
+<p><span class="badge badge-green">Result</span> Full To Do app with all core features, 50+ components, 5 Zustand stores, Dexie database with 5 tables.</p>
+
+<h4>Prompt 2 — Premium UI Overhaul</h4>
+<div style="background:#f8fafc; border-left: 4px solid #6366f1; padding: 12px 16px; margin: 10px 0 16px; border-radius: 0 8px 8px 0;">
+<p style="font-style: italic; color: #475569; margin: 0;">
+"The UI looks very old school — we need a much better, modern UI. Think glassmorphism, 3D animations, and premium design. Implement frosted glass effects with backdrop-filter blur on the sidebar, detail panel, dialogs, and context menus. Add animated mesh gradient backgrounds. Make task items into elevated 3D cards that lift on hover with colored shadows. Add spring-physics animations using Framer Motion for all panel transitions. Include animated checkboxes with glow effects, floating empty state icons, shimmer loading skeletons, and a complete dark mode with deep navy/indigo tones. The design should feel like a premium Microsoft Fluent Design System implementation."
+</p>
+</div>
+<p><span class="badge badge-green">Result</span> Complete CSS rewrite (350+ lines), glassmorphism on all surfaces, 3D card hover effects, animated mesh gradient background, spring animations, premium dark mode.</p>
+
+<h3>Phase 2: Microsoft 365 Integration</h3>
+
+<h4>Prompt 3 — Outlook & Teams Integration</h4>
+<div style="background:#f8fafc; border-left: 4px solid #6366f1; padding: 12px 16px; margin: 10px 0 16px; border-radius: 0 8px 8px 0;">
+<p style="font-style: italic; color: #475569; margin: 0;">
+"Integrate the app with Microsoft Outlook and Teams so I can get tasks and suggestions from them. Read flagged emails from Outlook and show them as task suggestions. Show upcoming calendar events in the Planned view. Pull in Teams messages where I'm mentioned and Planner tasks assigned to me. Use the Microsoft Graph API with MSAL authentication. The app should auto-sync every 5 minutes and cache all data in IndexedDB for offline access. Add a sign-in button in the sidebar, integration views in the navigation, and smart suggestions that combine local tasks with Microsoft 365 data."
+</p>
+</div>
+<p><span class="badge badge-green">Result</span> MSAL authentication, 4 Graph API services, 5 new IndexedDB tables, integration section in sidebar, smart suggestions engine, auto-sync hook.</p>
+
+<h4>Prompt 4 — Azure AD App Registration</h4>
+<div style="background:#f8fafc; border-left: 4px solid #6366f1; padding: 12px 16px; margin: 10px 0 16px; border-radius: 0 8px 8px 0;">
+<p style="font-style: italic; color: #475569; margin: 0;">
+"Help me set up the Azure AD app registration for this integration. I want to use my personal Azure account. Provide step-by-step instructions for the Azure Portal — create the app registration with SPA redirect URI to localhost:5173, add API permissions for Mail.Read, Calendars.Read, Tasks.Read, Tasks.ReadWrite, Team.ReadBasic.All, Chat.Read, User.Read, and enable implicit grant for access tokens and ID tokens."
+</p>
+</div>
+<p><span class="badge badge-green">Result</span> Step-by-step Azure Portal guide, app registration with Client ID 98f50838-..., personal account support with MSA tenant detection.</p>
+
+<h4>Prompt 5 — Fix Personal Account Compatibility</h4>
+<div style="background:#f8fafc; border-left: 4px solid #a855f7; padding: 12px 16px; margin: 10px 0 16px; border-radius: 0 8px 8px 0;">
+<p style="font-style: italic; color: #475569; margin: 0;">
+"I'm getting errors — Planner API returns 'not supported for MSA accounts', mail filter returns 'restriction too complex', Teams returns 403 Forbidden. Fix these for personal Microsoft accounts. Skip Planner and Teams APIs entirely for personal accounts (detect via MSA tenant ID), simplify the mail query to fetch recent emails and filter client-side, and hide unsupported sidebar items."
+</p>
+</div>
+<p><span class="badge badge-orange">Debug</span> Added MSA tenant detection (<code>9188040d-6c67-4c5b-b112-36a304b66dad</code>), fallback mail queries, conditional API calls, dynamic sidebar.</p>
+
+<h3>Phase 3: AI Chat Assistant</h3>
+
+<h4>Prompt 6 — Build the AI Bot</h4>
+<div style="background:#f8fafc; border-left: 4px solid #6366f1; padding: 12px 16px; margin: 10px 0 16px; border-radius: 0 8px 8px 0;">
+<p style="font-style: italic; color: #475569; margin: 0;">
+"I want to create an AI agent or bot that can add tasks, assign tasks, fetch meetings from Outlook, delete tasks, get task info — everything possible via a bot so that I don't even need to look at the app. Build a floating chat panel in the app with natural language understanding. It should support commands like 'add task buy groceries', 'show my tasks', 'complete the groceries task', 'what meetings do I have today?'. Include fuzzy matching for task names, rich data rendering for task lists and calendar events, quick action buttons, and chat history persistence."
+</p>
+</div>
+<p><span class="badge badge-green">Result</span> Regex command parser (20+ patterns), command executor, fuzzy matching (trigram similarity), floating chat panel with Framer Motion, rich data cards, quick action pills.</p>
+
+<h4>Prompt 7 — Add AI Integration</h4>
+<div style="background:#f8fafc; border-left: 4px solid #6366f1; padding: 12px 16px; margin: 10px 0 16px; border-radius: 0 8px 8px 0;">
+<p style="font-style: italic; color: #475569; margin: 0;">
+"The basic command format won't work — most people won't understand the syntax. Integrate real AI so users can type anything naturally and the AI understands and automatically calls the right commands or APIs. Use Claude API with tool calling so the AI decides which action to take based on natural language input. Also improve the chat UI to look more premium — better message bubbles, bot avatar, typing indicator, gradient header."
+</p>
+</div>
+<p><span class="badge badge-green">Result</span> Anthropic Claude integration with native tool calling, system prompt with task context, Vite proxy for CORS, redesigned chat panel with gradient theme and spring animations.</p>
+
+<h4>Prompt 8 — Free AI via NVIDIA NIM</h4>
+<div style="background:#f8fafc; border-left: 4px solid #6366f1; padding: 12px 16px; margin: 10px 0 16px; border-radius: 0 8px 8px 0;">
+<p style="font-style: italic; color: #475569; margin: 0;">
+"I found this repo (github.com/Alishahryar1/free-claude-code) that uses NVIDIA NIM for free LLM inference. Can you review it and integrate NVIDIA NIM as a free alternative to the paid Anthropic API? Use the Llama 3.1 70B model. Support both providers — let users toggle between NVIDIA NIM (free) and Anthropic Claude (paid) in the chat settings."
+</p>
+</div>
+<p><span class="badge badge-green">Result</span> Dual-provider AI system — NVIDIA NIM (free, prompt-based JSON actions) + Anthropic Claude (paid, native tool calling). Provider toggle in settings, API key management, Vite proxy for both.</p>
+
+<h4>Prompt 9 — Fix NVIDIA Model ID</h4>
+<div style="background:#f8fafc; border-left: 4px solid #a855f7; padding: 12px 16px; margin: 10px 0 16px; border-radius: 0 8px 8px 0;">
+<p style="font-style: italic; color: #475569; margin: 0;">
+"Getting 'Function not found' error from NVIDIA NIM. The model ID nvidia/llama-3.1-nemotron-70b-instruct isn't available on my account. Also, tool calling doesn't work — switch to a prompt-based approach where the AI returns JSON action blocks instead of using function calling."
+</p>
+</div>
+<p><span class="badge badge-orange">Debug</span> Tested API with curl, found correct model (<code>meta/llama-3.1-70b-instruct</code>), switched from tool calling to prompt-based JSON extraction with multi-pattern regex parsing.</p>
+
+<h3>Phase 4: Standalone CLI Agent</h3>
+
+<h4>Prompt 10 — Build CLI Agent</h4>
+<div style="background:#f8fafc; border-left: 4px solid #6366f1; padding: 12px 16px; margin: 10px 0 16px; border-radius: 0 8px 8px 0;">
+<p style="font-style: italic; color: #475569; margin: 0;">
+"I want a standalone CLI — if I just type 'todo' from the command line it should start a server and an interactive AI session. Anything I add via CLI should appear in the web app automatically. Build a global 'todo' command using npm link. It should start a REST API server on port 3001 and an interactive REPL that uses NVIDIA NIM for AI. The web app should poll the CLI server every 15 seconds and sync tasks bidirectionally. Store tasks in a JSON file. Support quick commands (tasks, myday, important) that run instantly without AI, plus full natural language for everything else. Use zero external dependencies — pure Node.js only."
+</p>
+</div>
+<p><span class="badge badge-green">Result</span> Single-file CLI agent (<code>todo.js</code>) with REST server + REPL, global <code>todo</code> command, colored terminal output, bidirectional sync with hash-based change detection, zero dependencies.</p>
+
+<h4>Prompt 11 — Add Update Action to CLI</h4>
+<div style="background:#f8fafc; border-left: 4px solid #a855f7; padding: 12px 16px; margin: 10px 0 16px; border-radius: 0 8px 8px 0;">
+<p style="font-style: italic; color: #475569; margin: 0;">
+"The AI generated an 'update_task' action but it doesn't exist in the CLI. Add an update_task action that can set due dates, toggle importance, toggle My Day, and rename tasks. Also add due_date support to add_task. Update the system prompt so the AI knows about these new capabilities."
+</p>
+</div>
+<p><span class="badge badge-orange">Enhancement</span> Added <code>update_task</code> action, <code>due_date</code> param to <code>add_task</code>, updated system prompt and REST endpoints.</p>
+
+<h4>Prompt 12 — Fix Sync Issues</h4>
+<div style="background:#f8fafc; border-left: 4px solid #a855f7; padding: 12px 16px; margin: 10px 0 16px; border-radius: 0 8px 8px 0;">
+<p style="font-style: italic; color: #475569; margin: 0;">
+"Tasks marked important via CLI aren't showing in the Important tab of the web app, even though the count badge shows 1. Also the UI keeps refreshing continuously when the CLI agent is running."
+</p>
+</div>
+<p><span class="badge badge-orange">Debug</span> Fixed Dexie indexed query (<code>.where().equals(1)</code> → <code>.filter()</code>), added hash-based change detection to skip redundant syncs, increased interval to 15s with 3s startup delay.</p>
+
+<h3>Phase 5: Documentation & Deployment</h3>
+
+<h4>Prompt 13 — Push to GitHub</h4>
+<div style="background:#f8fafc; border-left: 4px solid #6366f1; padding: 12px 16px; margin: 10px 0 16px; border-radius: 0 8px 8px 0;">
+<p style="font-style: italic; color: #475569; margin: 0;">
+"Push all changes to https://github.com/IAMAKANSH/cloneTodo.git. Initialize git, create a comprehensive commit message covering all features, add proper .gitignore (exclude node_modules, dist, agent/.env, agent/tasks.json, .claude), and force push to main."
+</p>
+</div>
+<p><span class="badge badge-green">Result</span> Repository live with 81 files, proper .gitignore, descriptive commit message.</p>
+
+<h4>Prompt 14 — README & Documentation</h4>
+<div style="background:#f8fafc; border-left: 4px solid #6366f1; padding: 12px 16px; margin: 10px 0 16px; border-radius: 0 8px 8px 0;">
+<p style="font-style: italic; color: #475569; margin: 0;">
+"Create a README.md with setup instructions, a PLAN.md documenting all features we've built, and a comprehensive PDF documentation covering the complete tech stack, features, architecture, database schema, all API endpoints, Microsoft Graph integration details, authentication flow, AI integration with both providers, all prompts and tool definitions used, CLI agent details, UI design system, project structure, and setup guide."
+</p>
+</div>
+<p><span class="badge badge-green">Result</span> README.md, PLAN.md, and this 15-section PDF documentation.</p>
+
+<h3>Summary: Prompt Engineering Approach</h3>
+
+<table>
+  <tr><th>Technique</th><th>How We Used It</th></tr>
+  <tr><td><strong>Incremental building</strong></td><td>Each prompt built on the previous phase — core app → UI → integration → AI → CLI → docs</td></tr>
+  <tr><td><strong>Specific tech choices</strong></td><td>Naming exact libraries (Zustand, Dexie, Framer Motion) gave the AI clear constraints</td></tr>
+  <tr><td><strong>Problem → Solution framing</strong></td><td>Debug prompts described the error + expected behavior, not just "fix it"</td></tr>
+  <tr><td><strong>Architecture in prompts</strong></td><td>Describing the 3-panel layout, sync mechanism, and data flow guided the structure</td></tr>
+  <tr><td><strong>Iterative refinement</strong></td><td>Started with basic features, then layered premium UI, AI, and CLI on top</td></tr>
+  <tr><td><strong>Real-world constraints</strong></td><td>Personal vs work accounts, CORS issues, popup blockers — addressed as encountered</td></tr>
+</table>
+
+<p style="margin-top: 20px;"><strong>Total prompts:</strong> 14 major prompts + ~20 debug/refinement iterations<br>
+<strong>Total development time:</strong> ~4 hours (including Azure AD setup, API debugging, UI iterations)<br>
+<strong>AI model used:</strong> Claude Opus 4.6 (1M context) via Claude Code CLI</p>
+
+<hr style="margin-top: 60px; border: none; border-top: 2px solid #e2e8f0;">
+<p style="text-align: center; color: #94a3b8; font-size: 9pt; margin-top: 20px;">
+  Generated on April 9, 2026 — Microsoft To Do Clone v1.0.0<br>
+  Built by Akansh Srivastava with Claude Opus 4.6
+</p>
+
+</body>
+</html>
